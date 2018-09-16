@@ -8,6 +8,10 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import org.springframework.data.annotation.Transient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "pessoa")
 public class Pessoa {
@@ -56,10 +60,10 @@ public class Pessoa {
 	public void setAtivo(Boolean ativo) {
 		this.ativo = ativo;
 	}
-	
+
 	@Override
 	public String toString() {
-		
+
 		return "Nome: " + this.getNome() + "Rua: " + this.getEndereco().getLogradouro();
 	}
 
@@ -87,5 +91,11 @@ public class Pessoa {
 			return false;
 		return true;
 	}
-	
+
+	@JsonIgnore
+	@Transient
+	public boolean isInativo() {
+		return !this.ativo;
+	}
+
 }

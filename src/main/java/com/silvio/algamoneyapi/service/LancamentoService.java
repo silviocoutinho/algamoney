@@ -6,13 +6,19 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.silvio.algamoneyapi.model.Lancamento;
+import com.silvio.algamoneyapi.model.Pessoa;
 import com.silvio.algamoneyapi.repository.LancamentoRepository;
+import com.silvio.algamoneyapi.repository.PessoaRepository;
+import com.silvio.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
 public class LancamentoService {
 
 	@Autowired
 	private LancamentoRepository repo;
+	
+	@Autowired
+	private PessoaRepository pessoaRepository;
 
 	public Lancamento atualizar(Lancamento obj, Long codigo) {
 		Lancamento objSalvo = buscarLancamentoPeloCodigo(codigo);
@@ -30,7 +36,12 @@ public class LancamentoService {
 	}
 
 
-	public Lancamento criar(Lancamento obj) {
+	public Lancamento salvar(Lancamento obj) {
+		Pessoa pessoa = pessoaRepository.findOne(obj.getPessoa().getCodigo());
+		if(pessoa == null || pessoa.isInativo()) {
+			throw new PessoaInexistenteOuInativaException();
+		}
+		
 		return repo.save(obj);
 		
 	}
