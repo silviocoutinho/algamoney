@@ -48,11 +48,15 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
 					));
 		}
 		
-		if (filter.getAtivo()) {
+		if (filter.getAtivo() != null && filter.getAtivo() ) {
 			predicates.add(builder.isTrue(root.get(Pessoa_.ativo)));			
 		}
 					
-				
+		if (filter.getAtivo() != null && !filter.getAtivo() ) {
+			predicates.add(builder.isFalse(root.get(Pessoa_.ativo)));			
+		}
+
+		
 		return predicates.toArray(new Predicate[predicates.size()]);
 	}
 
