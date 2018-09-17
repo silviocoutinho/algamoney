@@ -3,12 +3,14 @@ package com.silvio.algamoneyapi.service;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.silvio.algamoneyapi.model.Lancamento;
 import com.silvio.algamoneyapi.model.Pessoa;
 import com.silvio.algamoneyapi.repository.LancamentoRepository;
 import com.silvio.algamoneyapi.repository.PessoaRepository;
+import com.silvio.algamoneyapi.service.exception.LancamentoInexistenteException;
 import com.silvio.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @Service
@@ -44,6 +46,16 @@ public class LancamentoService {
 		
 		return repo.save(obj);
 		
+	}
+	
+	public ResponseEntity excluir(Long codigo) {
+		Lancamento obj = repo.findOne(codigo);
+		if (obj == null) {
+			throw new LancamentoInexistenteException();
+			
+		}
+		repo.delete(codigo);
+		return ResponseEntity.noContent().build();
 	}
 
 }

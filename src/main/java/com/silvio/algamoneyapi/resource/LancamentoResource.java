@@ -12,6 +12,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,6 +28,7 @@ import com.silvio.algamoneyapi.model.Lancamento;
 import com.silvio.algamoneyapi.repository.LancamentoRepository;
 import com.silvio.algamoneyapi.repository.filter.LancamentoFilter;
 import com.silvio.algamoneyapi.service.LancamentoService;
+import com.silvio.algamoneyapi.service.exception.LancamentoInexistenteException;
 import com.silvio.algamoneyapi.service.exception.PessoaInexistenteOuInativaException;
 
 @RestController
@@ -69,13 +71,30 @@ public class LancamentoResource {
 
 	}
 	
+	@DeleteMapping("/{codigo}")
+	public void apagar(@PathVariable Long codigo){
+		service.excluir(codigo);	
+			
+		
+	}
+	
 	@ExceptionHandler({PessoaInexistenteOuInativaException.class})
-	public ResponseEntity<Object> handlePessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex){
+	public ResponseEntity<Object> handlerPessoaInexistenteOuInativaException(PessoaInexistenteOuInativaException ex){
 		String mensagemUsuario = messageSource.getMessage("pessoa.inexistente-ou-inativa", null,
 				LocaleContextHolder.getLocale());
 		String mensagemDesenvolvedor =  ex.toString();
 		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
 		return ResponseEntity.badRequest().body(erros);
+	}
+	
+	@ExceptionHandler({LancamentoInexistenteException.class})
+	public ResponseEntity<Object> handlerLancamentoInexistenteException(LancamentoInexistenteException ex){
+		String mensagemUsuario = messageSource.getMessage("lancamento.inexistente", null,
+				LocaleContextHolder.getLocale());
+		String mensagemDesenvolvedor =  ex.toString();
+		List<Erro> erros = Arrays.asList(new Erro(mensagemUsuario, mensagemDesenvolvedor));
+		return ResponseEntity.badRequest().body(erros);
+		//return ResponseEntity.notFound().build();
 	}
 
 }
