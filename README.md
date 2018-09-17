@@ -1,4 +1,4 @@
 # algamoney-api
-API para testes
-Lancamento de Contas
+API para testes,
+Lancamento de Contas,
 Pesquisa de Contas
