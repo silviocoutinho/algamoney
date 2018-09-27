@@ -10,7 +10,7 @@ public class AlgamoneyApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(AlgamoneyApiApplication.class, args);
-		
-		System.out.println(Locale.getDefault()); 
+
+		System.out.println(Locale.getDefault());
 	}
 }
