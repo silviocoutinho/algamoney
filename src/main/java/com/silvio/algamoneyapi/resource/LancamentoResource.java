@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,12 +51,25 @@ public class LancamentoResource {
 	private MessageSource messageSource;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	public Page<Lancamento> pesquisar(LancamentoFilter lancamentoFilter, Pageable pageable) {
 		
 		return repo.filtrar(lancamentoFilter, pageable);
 	}
 
+	@GetMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
+		Lancamento obj = repo.findOne(codigo);
+		if (obj == null) {
+			return ResponseEntity.notFound().build();
+		}
+		return ResponseEntity.ok().body(obj);
+	}
+
+	
 	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_LANCAMENTO') and #oauth2.hasScope('write')")
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<Lancamento> criar(@Valid @RequestBody Lancamento obj, HttpServletResponse response) {
 		Lancamento objSalvo = service.salvar(obj);
@@ -63,17 +77,9 @@ public class LancamentoResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(objSalvo);
 	}
 
-	@GetMapping("/{codigo}")
-	public ResponseEntity<Lancamento> buscarPeloCodigo(@PathVariable Long codigo) {
-		Lancamento obj = repo.findOne(codigo);
-		if (obj == null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok().body(obj);
-
-	}
 	
 	@DeleteMapping("/{codigo}")
+	@PreAuthorize("hasAuthority('ROLE_REMOVER_LANCAMENTO') and #oauth2.hasScope('write')")
 	public void apagar(@PathVariable Long codigo){
 		service.excluir(codigo);	
 			
