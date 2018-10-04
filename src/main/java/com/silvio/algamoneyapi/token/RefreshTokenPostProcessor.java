@@ -40,7 +40,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 			int expiry) {
 		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		refreshTokenCookie.setHttpOnly(true);
-		refreshTokenCookie.setSecure(false); // mudar para true em producao, so funciona em HTTPS se for true
+		refreshTokenCookie.setSecure(false); //TODO: mudar para true em producao, so funciona em HTTPS se for true
 		refreshTokenCookie.setPath(req.getContextPath() + "/oauth/token");
 		refreshTokenCookie.setMaxAge(expiry);
 		resp.addCookie(refreshTokenCookie);
