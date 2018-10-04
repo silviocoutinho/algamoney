@@ -23,11 +23,6 @@
       "sourceType": "com.silvio.algamoneyapi.config.property.AlgaMoneyApiProperty$Seguranca",
       "name": "algamoney.seguranca.enable-https",
       "type": "java.lang.Boolean"
-    },
-    {
-      "sourceType": "com.silvio.algamoneyapi.config.property.AlgaMoneyApiProperty$Seguranca",
-      "name": "algamoney.seguranca.enable-https",
-      "type": "java.lang.Boolean"
     }
   ]
 }

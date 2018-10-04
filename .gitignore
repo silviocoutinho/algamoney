@@ -1,12 +1,12 @@
-target/
+#target/
 
 ### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
+#.apt_generated
+#.classpath
+#.factorypath
+#.project
+#.settings
+#.springBeans
 
 # Compiled class file
 *.class
