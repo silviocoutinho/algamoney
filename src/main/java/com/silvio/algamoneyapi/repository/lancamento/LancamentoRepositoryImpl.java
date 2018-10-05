@@ -16,10 +16,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 
-import com.silvio.algamoneyapi.model.Categoria_;
 import com.silvio.algamoneyapi.model.Lancamento;
-import com.silvio.algamoneyapi.model.Lancamento_;
-import com.silvio.algamoneyapi.model.Pessoa_;
 import com.silvio.algamoneyapi.repository.filter.LancamentoFilter;
 import com.silvio.algamoneyapi.repository.projection.ResumoLancamento;
 
@@ -51,11 +48,11 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		Root<Lancamento> root = criteria.from(Lancamento.class);
 		
 		criteria.select(builder.construct(ResumoLancamento.class 
-				, root.get(Lancamento_.codigo), root.get(Lancamento_.descricao)
-				, root.get(Lancamento_.dataVencimento), root.get(Lancamento_.dataPagamento)
-				, root.get(Lancamento_.valor), root.get(Lancamento_.tipo)
-				, root.get(Lancamento_.categoria).get(Categoria_.nome)
-				, root.get(Lancamento_.pessoa).get(Pessoa_.nome)
+				, root.get("codigo"), root.get("descricao")
+				, root.get("dataVencimento"), root.get("dataPagamento")
+				, root.get("valor"), root.get("tipo")
+				, root.get("categoria").get("nome")
+				, root.get("pessoa").get("nome")
 				));
 		
 		// Criar as restrincoes
@@ -74,17 +71,17 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		List<Predicate> predicates = new ArrayList<>();
 
 		if (!StringUtils.isEmpty(filter.getDescricao())) {
-			predicates.add(builder.like(builder.lower(root.get(Lancamento_.descricao)),
+			predicates.add(builder.like(builder.lower(root.get("descricao")),
 					"%" + filter.getDescricao().toLowerCase() + "%"));
 		}
 		if (filter.getDataVencimentoDe() != null) {
 			predicates.add(
-					builder.greaterThanOrEqualTo(root.get(Lancamento_.dataVencimento), filter.getDataVencimentoDe()));
+					builder.greaterThanOrEqualTo(root.get("dataVencimento"), filter.getDataVencimentoDe()));
 
 		}
 		if (filter.getDataVencimentoAte() != null) {
 			predicates.add(
-					builder.lessThanOrEqualTo(root.get(Lancamento_.dataVencimento), filter.getDataVencimentoAte()));
+					builder.lessThanOrEqualTo(root.get("dataVencimento"), filter.getDataVencimentoAte()));
 			System.out.println(filter.getDataVencimentoAte());
 			
 		}

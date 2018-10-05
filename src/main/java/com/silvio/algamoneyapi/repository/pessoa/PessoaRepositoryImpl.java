@@ -15,9 +15,7 @@ import javax.persistence.criteria.Root;
 import org.springframework.util.StringUtils;
 
 import com.silvio.algamoneyapi.model.Endereco;
-import com.silvio.algamoneyapi.model.Endereco_;
 import com.silvio.algamoneyapi.model.Pessoa;
-import com.silvio.algamoneyapi.model.Pessoa_;
 import com.silvio.algamoneyapi.repository.filter.PessoaFilter;
 
 public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
@@ -33,7 +31,7 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
 		Root<Pessoa> root = criteria.from(Pessoa.class);
 		//Criacao de uma criteria para Join, nessa cada o campo endereco
 		//eh embedded attribute
-		Join<Pessoa, Endereco> criteriaJoin = root.join(Pessoa_.endereco);
+		Join<Pessoa, Endereco> criteriaJoin = root.join("endereco");
 
 		// Criar restrincoes
 		Predicate[] predicates = criarRestricoes(filter, builder, root, criteriaJoin);
@@ -49,22 +47,22 @@ public class PessoaRepositoryImpl implements PessoaRepositoryQuery {
 		
 		if (!StringUtils.isEmpty(filter.getNome())) {
 			predicates.add(builder.like(
-					builder.lower(root.get(Pessoa_.nome)), "%" + filter.getNome().toLowerCase() + "%"
+					builder.lower(root.get("nome")), "%" + filter.getNome().toLowerCase() + "%"
 					));
 		}
 		
 		if (filter.getAtivo() != null && filter.getAtivo() ) {
-			predicates.add(builder.isTrue(root.get(Pessoa_.ativo)));			
+			predicates.add(builder.isTrue(root.get("ativo")));			
 		}
 					
 		if (filter.getAtivo() != null && !filter.getAtivo() ) {
-			predicates.add(builder.isFalse(root.get(Pessoa_.ativo)));			
+			predicates.add(builder.isFalse(root.get("ativo")));			
 		}
 		
 		//Teste para cidade
 		if (!StringUtils.isEmpty(filter.getCidade())) {
 			predicates.add(builder.like(
-					builder.lower(criteriaJoin.get(Endereco_.cidade)), "%" + filter.getCidade().toLowerCase() + "%"
+					builder.lower(criteriaJoin.get("cidade")), "%" + filter.getCidade().toLowerCase() + "%"
 					));
 		}
 		//Fim teste para cidade
